@@ -1,18 +1,18 @@
-# MasterBioInformaticsPTs
+# MasterArtificialIntelligencePTs
 
 ## Presentation
 
 Folders containing main practical works.<br>
-Master's degree link : http://www.lcqb.upmc.fr/BIM/
+Master's degree link : https://dac.lip6.fr/master/
 
 <pre><code>
-MasterBioInformaticsPTs/
-├── S1/
-│     ├── AAGB/      (Algorithmes sur les arbres et les graphes en bioinformatique)
-│     ├── LRC/ 	     (Logique et représentation des connaissances)   
-│     ├── MAPSI/     (Modèles et algorithmes de probabilités et statistiques pour l'informatique)
-│     ├── MM062/     (Systèmes dynamiques discrets et continus en biologie et médecine)
-|     └── BIMA/      (Bases du traitement des images)
+MasterArtificialIntelligencePTs/
+├── S2/
+│     ├── ML/       (Machine Learning)
+│     ├── RITAL/ 	(Recherche d'Information et Traitement Automatique de la Langue) 
+│     ├── IAMSI/    (Intelligence Artificielle et Manipulation Symbolique de l'Information)  
+│     ├── BIUM/     (Business Intelligence and User Modelling)
+|     └── PLDAC/    (Projet Laboratoire DAC)
 ├── README.md		          
 └── LICENCE  
 </pre></code>
