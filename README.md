@@ -9,7 +9,7 @@ Master's degree link : https://dac.lip6.fr/master/
 MasterArtificialIntelligencePTs/
 ├── S2/
 │     ├── ML/       (Machine Learning)
-│     ├── RITAL/  (Recherche d'Information et Traitement Automatique de la Langue) 
+│     ├── RITAL/    (Recherche d'Information et Traitement Automatique de la Langue) 
 │     ├── IAMSI/    (Intelligence Artificielle et Manipulation Symbolique de l'Information)  
 │     ├── BIUM/     (Business Intelligence and User Modelling)
 |     └── PLDAC/    (Projet Laboratoire DAC)
