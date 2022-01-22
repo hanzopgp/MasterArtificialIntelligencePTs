@@ -11,8 +11,7 @@ MasterArtificialIntelligencePTs/
 │     ├── ML/       (Machine Learning)
 │     ├── RITAL/    (Recherche d'Information et Traitement Automatique de la Langue) 
 │     ├── IAMSI/    (Intelligence Artificielle et Manipulation Symbolique de l'Information)  
-│     ├── BIUM/     (Business Intelligence and User Modelling)
-|     └── PLDAC/    (Projet Laboratoire DAC)
+│     └── BIUM/     (Business Intelligence and User Modelling)
 ├── README.md		          
 └── LICENCE  
 </pre></code>
