@@ -12,7 +12,7 @@ MasterArtificialIntelligencePTs/
 │     ├── RITAL/    (Recherche d'Information et Traitement Automatique de la Langue) 
 │     ├── IAMSI/    (Intelligence Artificielle et Manipulation Symbolique de l'Information)  
 │     ├── BIUM/     (Business Intelligence and User Modelling)
-|     └── PLDAC/    (Projet Laboratoire DAC)
+│     └── PLDAC/    (see JetsonAutonomousDriving repository)
 ├── README.md		          
 └── LICENCE  
 </pre></code>
