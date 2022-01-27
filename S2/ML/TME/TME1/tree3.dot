@@ -1,0 +1,32 @@
+digraph Tree {
+node [shape=box] ;
+0 [label="Drama <= 0.5\ngini = 0.491\nsamples = 4587\nvalue = [1985, 2602]"] ;
+1 [label="annee <= 1984.5\ngini = 0.489\nsamples = 2318\nvalue = [1330, 988]"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="annee <= 1976.5\ngini = 0.328\nsamples = 319\nvalue = [66, 253]"] ;
+1 -> 2 ;
+3 [label="gini = 0.169\nsamples = 183\nvalue = [17, 166]"] ;
+2 -> 3 ;
+4 [label="gini = 0.461\nsamples = 136\nvalue = [49, 87]"] ;
+2 -> 4 ;
+5 [label="Duree <= 110.5\ngini = 0.465\nsamples = 1999\nvalue = [1264, 735]"] ;
+1 -> 5 ;
+6 [label="gini = 0.418\nsamples = 1487\nvalue = [1045, 442]"] ;
+5 -> 6 ;
+7 [label="gini = 0.49\nsamples = 512\nvalue = [219, 293]"] ;
+5 -> 7 ;
+8 [label="budget <= 15660000.0\ngini = 0.411\nsamples = 2269\nvalue = [655, 1614]"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="Duree <= 104.5\ngini = 0.283\nsamples = 1113\nvalue = [190, 923]"] ;
+8 -> 9 ;
+10 [label="gini = 0.387\nsamples = 480\nvalue = [126, 354]"] ;
+9 -> 10 ;
+11 [label="gini = 0.182\nsamples = 633\nvalue = [64, 569]"] ;
+9 -> 11 ;
+12 [label="Duree <= 115.5\ngini = 0.481\nsamples = 1156\nvalue = [465, 691]"] ;
+8 -> 12 ;
+13 [label="gini = 0.486\nsamples = 540\nvalue = [315, 225]"] ;
+12 -> 13 ;
+14 [label="gini = 0.368\nsamples = 616\nvalue = [150, 466]"] ;
+12 -> 14 ;
+}
