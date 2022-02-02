@@ -69,7 +69,7 @@ INSERT INTO Produit (numP, nomP, prixP, délaiLiv, stock)  values
     (95676, 'Back-up System','89.00', 12, 7)
     ;
 
-select * from produit
+select * from Produit
 
 INSERT INTO  Fournisseur(numF, nomF, ville, province, pays, remise) values 
     (29929, 'ColorMeg', 'paris','idf','france',0.10),
@@ -93,7 +93,7 @@ select * from Achat
 
 
 
-INSERT INTO  AchatUnit(noAchat, numP, qte, prixUnit) VALUES 
+INSERT INTO  AchatUnit(noAchat, numP, qte, prixUnit) values 
     (24040, 36566, 10, 150.00),
     (24040, 36577, 11, 650.00),
     (49952, 12138, 10, 89.00),
