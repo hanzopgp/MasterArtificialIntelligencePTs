@@ -1,0 +1,37 @@
+DAM Damien
+DURAND Enzo
+Rapport TME5
+
+Exo 2:
+- On commence par définir `n`, le nombre de reines de notre problème. Ce constant peut être redéfini au temps d'éxecution sans modifier le fichier source en passant `--const n=N` en argument de clingo où `N` est le nombre désiré
+- On définit les lignes et colonnes possibles en énumérant les faits `row` et `col` de 1 à `n` inclus
+- On génère toute combinaison possible de position des reines sur l'échequier en définissant le fait `queen(R,C)` où `R` est ligne et `C` est colonne, en précisant que `R` et `C` ne peuvent être valides que si `row(R)` et `col(C)` sont valides. Ensuite on limite la cardinalité de ce fait pour chaque answer set à `n`, c'est-à-dire pour chaque réponse valide à notre problème, il y a exactement `n` fois où `queen` est défini.
+- Avec toutes les combinaisons possibles des reines, on va maintenant éliminer les mauvaises réponses en précisant les règles sans tête.
+- D'abord on élimine les reines qui sont sur les mêmes lignes avec le règle `:- queen(I,J1), queen(I,J2), J1!=J2.` Il se lit "éliminer toutes les réponses qui valident deux reines de différentes colonnes J1 et J2 sur la même ligne I." On fait la même chose avec les colonnes.
+- Pour les diagonaux, on constate qu'il n'y a que 2 types : nord-ouest à sud-est et sud-ouest à nord-est. Pour le premier, en traversant un diagonal de ce type, on constate que la différence entre le nombre de ligne et de colonne ne change pas, donc le règle `:- queen(I,J), queen(II,JJ), (I,J) != (II,JJ), I-J==II-JJ.` qui se lit "eliminer toutes les réponses qui valident deux reines sur le même diagonal NO-SE." De même logique, on écrit le règle pour le deuxième type de diagonal, cette fois-ci la somme de nombre de ligne et de colonne ne change pas sur le même diagonal.
+- Finalement, on n'affiche que les faits `queen/2` qui nous intéressent.
+
+Exo 3:
+- On commence par définir les faits `col` et `row` comme le dernier exo de 0 à 8 étant les indices des lignes et des colonnes. Le fait `val` représente la valeur peut prend une case, donc de 1 à 9.
+- On génère le fait `cell(R,C,V)` représentant la valeur `V` dans la case (R,C). Le règle `1 {cell(R,C,V) : val(V)}1 :- row(R), col(C).` se lit "pour chaque paire de faits `row` et `col` valide, il y a exactement une valeur dans la case (R,C)."
+- Ensuite on écrit les contraintes que chaque colonne et chaque ligne ne peut contenir aucune doublon. Pour les lignes le règle est `:- cell(R,C1,V), cell(R,C2,V), C1!=C2.` qui élimine les réponses permettant la même valeur sur la même ligne. On fait la même chose pour les colonnes.
+- On définit une sous-grille avec le fait `subgrid`. Chaque case de la même sous-grille a pour nombre de ligne et de colonne le même quotient en étant divisé par 3, donc le règle `subgrid(R1,C1,R2,C2) :- col(C1), col(C2), row(R1), row(R2),  (C1/3)==(C2 / 3), (R1/3)==(R2/3).`
+- Pour terminer les contraintes, on élimine toutes les réponses contenant des doublons dans une même sous-grille.
+- Finalement, on construit la grille dans le sujet avec les faits `cell`
+
+Exo 5:
+- On définit d'abord les nombres possibles de chaque maison à 1 à 5 avec le fait `num`, puis selon l'énoncé les couleurs possibles (`color`), les nationalités (`origin`), les boissons (`drink`), les animaux (`pet`), et les marques de cigarette (`smoke`).
+- Aucune maison n'a la même couleur, et ainsi une maison n'a qu'une couleur. On génère donc le règle `house_color(N,X)` avec le contrainte de cardinalité de 5 pour représenter la maison numéro `N` ayant la couleur `X`. On élimine toutes les réponses qui ne valident pas les contraintes.
+- De même manière, on génère les règle `house_origin`, `house_drink`, `house_pet` et `house_smoke`.
+- Pour le contrainte "Le Britannique vit dans la maison rouge" on ajoute le règle `:- house_color(N,rouge), house_origin(N,O), O!=brit` qui élimine la possibilité d'avoir la maison `N` de couleur `rouge` ayant la nationalité autre que `brit`. Il est inutile de faire l'inverse car la permutation de ce problème nous permet d'implicitement éliminer la possibilité d'avoir le britannique vivant dans une maison ayant la couleur autre que rouge.
+- De même manière on procède avec les contraintes restants.
+- Pour aider la visualisation de la réponse, on a fait un petit script python `ex5.py` qui affiche en couleur toutes les réponses données par clingo. Il faut mettre l'exécutable `clingo` (Mac, Linux) ou `clingo.exe` (Windows) dans le même dossier avant de pouvoir exécuter ce script
+- Qui possède des poissons ? C'est l'allemand qui vit dans la maison verte, boit le café et fume des Princess.
+
+Exo 6:
+- On commence par définir les constants `ne`, `ns`, `nj` et `n_match`. Le calcul de `n_match` est simple : le nombre de 2-combinaison entre toutes les équipes, multiplié par 2 car chaque rencontre entre 2 équipes se passe exactement deux fois, soit ne*(ne-1)
+- Les faits `equipe` et `jour` étant énuméré de 1 à `ne` et 1 à `nj` représentent les équipes et les jours du championnat
+- On définit le fait `match(J,E1,E2)` représentant le match entre E1 et E2 au jour J, en limitant la cardinalité de ce fait pour chaque answer set à exactement `n_match`. De plus, en explicitement ordonnant E1 avant E2, le match a lieu à domicile pour E1 et à l'extérieur pour E2.
+- Pour les contraintes, on élimine d'abord toutes les réponse ayant les matchs entre la même équipe avec le règle `:- match(J,E,E).`
+- Comme chaque équipe ne joue qu'un match par jour, on élimine les réponses ayant une équipe rencontrant 2 advesaires différents au même jour. Ainsi, au même jour, une équipe ne peut jouer que soit à domicile, soit à l'extérieur.
+- Finalement, pour le contrainte d'avoir exactement 2 rencontres entre chaque paire d'équipes, 1 à domicile et 1 à l'extérieur pour chaque, on constate que chaque paire ordonnée (E1,E2) ne peut pas avoir de doublons avec le fait `match`. On valide ce contrainte en éliminant les réponses contenant les matchs entre E1 et E2 (ordonné) sur 2 jours différents, soit le règle `:- match(J1,E1,E2), match(J2,E1,E2), J1!=J2.`
