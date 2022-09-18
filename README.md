@@ -8,11 +8,17 @@ Master's degree link : https://dac.lip6.fr/master/
 <pre><code>
 MasterArtificialIntelligencePTs/
 ├── S2/
-│     ├── ML/       (Machine Learning)
-│     ├── RITAL/    (Recherche d'Information et Traitement Automatique de la Langue) 
-│     ├── IAMSI/    (Intelligence Artificielle et Manipulation Symbolique de l'Information)  
-│     ├── BIUM/     (Business Intelligence and User Modelling)
+│     ├── ML/       (Machine learning)
+│     ├── RITAL/    (Information retrieval & natural language processing) 
+│     ├── IAMSI/    (Symbolic artificial intelligence)  
+│     ├── BIUM/     (Business intelligence & user modelling)
 │     └── PLDAC/    (see JetsonAutonomousDriving repository)
+├── S3/
+│     ├── AMAL/     (Machine learning & deep learning)
+│     ├── RLD/      (Reinforcement learning & deep learning) 
+│     ├── IAR/      (Artificial intelligence for robotics)  
+│     ├── RDFIA/    (Computer vision)
+│     └── REDS/     (Research methodology in data science)
 ├── README.md		          
 └── LICENCE  
 </pre></code>
