@@ -1,0 +1,23 @@
+Variance in data because people do not execute the exact same hand gesture during data acquisition.
+Split between users for the validation to avoid overfit.
+
+Data analysis:
+Task description
+Data description
+Context description
+Experimental protocol
+
+Data description:
+angles are in degree
+0 --> 21 index: angles provided by the glove
+22 --> 28 index: pitch angles to differentiate gestures with similar handshapes and distinct orientation
+
+Experimental protocol:
+	evaluation: 
+		- classification report to spot harder classes and to think about it
+		- human in the loop check in order to spot errors
+		- from sklearn.metrics import classification_report
+		- from sklearn.metrics import f1_score 
+
+
+
