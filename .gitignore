@@ -1,4 +1,8 @@
 OLD_TPs/
 data/
 
+*.jpg
+*.jpeg
+*.png
+
 events.out*
