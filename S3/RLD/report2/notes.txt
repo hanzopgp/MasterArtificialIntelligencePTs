@@ -1,0 +1,57 @@
+param cartpole:
+
+for seed in range(5):
+  print("---------------> SEED:", seed)
+  params={
+    "save_best": False,
+    "logger":{
+      "classname": "bbrl.utils.logger.TFLogger",
+      "log_dir": "./tmp/dqn-buffer-" + str(time.time()),
+      "cache_size": 10000,
+      "every_n_seconds": 10,
+      "verbose": False,    
+      },
+
+    "algorithm":{
+      "seed": seed,
+      "max_grad_norm": 0.5,
+      "epsilon": 0.02,
+      "epsilon_decay": 1e-6,
+      "n_envs": 16,
+      "n_steps": 32,
+      "eval_interval": 2000,
+      "learning_starts": 2000,
+      "nb_evals": 10,
+      "buffer_size": 1e6,
+      "batch_size": 256,
+      "target_critic_update": 5000,
+      "max_epochs": 3500,
+      "discount_factor": 0.99,
+      "architecture":{"hidden_size": [256, 256]},
+    },
+    "gym_env":{
+      "classname": "__main__.make_env",
+      # "env_name": "LunarLander-v2",
+      "env_name": "CartPole-v1",
+    },
+    "optimizer":
+    {
+      "classname": "torch.optim.Adam",
+      "lr": 2e-3,
+    }
+  }
+
+  config=OmegaConf.create(params)
+  torch.manual_seed(config.algorithm.seed)
+
+  run_dqn(config, compute_dqn_loss)
+
+
+
+
+
+
+
+
+  param lunarlander:
+

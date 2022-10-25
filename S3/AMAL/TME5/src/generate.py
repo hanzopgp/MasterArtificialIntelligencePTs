@@ -5,17 +5,24 @@ import torch
 #  TODO:  Ce fichier contient les différentes fonction de génération
 
 def generate(rnn, emb, decoder, eos, start="", maxlen=200):
-    """  Fonction de génération (l'embedding et le decodeur être des fonctions du rnn). Initialise le réseau avec start (ou à 0 si start est vide) et génère une séquence de longueur maximale 200 ou qui s'arrête quand eos est généré.
-        * rnn : le réseau
-        * emb : la couche d'embedding
-        * decoder : le décodeur
-        * eos : ID du token end of sequence
-        * start : début de la phrase
-        * maxlen : longueur maximale
-    """
-
-    #  TODO:  Implémentez la génération à partir du RNN, et d'une fonction decoder qui renvoie les logits (logarithme de probabilité à une constante près, i.e. ce qui vient avant le softmax) des différentes sorties possibles
-
+	"""  Fonction de génération (l'embedding et le decodeur être des fonctions du rnn). Initialise le réseau avec start (ou à 0 si start est vide) et génère une séquence de longueur maximale 200 ou qui s'arrête quand eos est généré.
+		* rnn : le réseau
+		* emb : la couche d'embedding
+		* decoder : le décodeur
+		* eos : ID du token end of sequence
+		* start : début de la phrase
+		* maxlen : longueur maximale
+	"""
+	l = 0
+	res = start
+	output = start
+	while l < maxlen:
+		output = decoder(rnn(emb(output)).argmax(axis=1))
+		if output == eos:
+			break
+		res += output
+		l+=1
+	return start
 
 def generate_beam(rnn, emb, decoder, eos, k, start="", maxlen=200):
     """

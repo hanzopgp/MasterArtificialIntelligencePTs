@@ -53,29 +53,32 @@ class TextDataset(Dataset):
         return string2code(self.phrases[i])
 
 def pad_collate_fn(samples: List[List[int]]):
-    #  TODO:  Renvoie un batch à partir d'une liste de listes d'indexes (de phrases) qu'il faut padder.
+	print(len(samples[0]))
 
 
 if __name__ == "__main__":
-    test = "C'est. Un. Test."
-    ds = TextDataset(test)
-    loader = DataLoader(ds, collate_fn=pad_collate_fn, batch_size=3)
-    data = next(iter(loader))
-    print("Chaîne à code : ", test)
-    # Longueur maximum
-    assert data.shape == (7, 3)
-    print("Shape ok")
-    # e dans les deux cas
-    assert data[2, 0] == data[1, 2]
-    print("encodage OK")
-    # Token EOS présent
-    assert data[5,2] == EOS_IX
-    print("Token EOS ok")
-    # BLANK présent
-    assert (data[4:,1]==0).sum() == data.shape[0]-4
-    print("Token BLANK ok")
-    # les chaînes sont identiques
-    s_decode = " ".join([code2string(s).replace(id2lettre[PAD_IX],"").replace(id2lettre[EOS_IX],"") for s in data.t()])
-    print("Chaîne décodée : ", s_decode)
-    assert test == s_decode
-    # " ".join([code2string(s).replace(id2lettre[PAD_IX],"").replace(id2lettre[EOS_IX],"") for s in data.t()])
+	print(len(lettre2id))
+	# PATH = "../data/"
+	# matrix_test = torch.load(open(PATH+"trump_full_speech.txt","rb"))
+	# print(matrix_test)
+	# ds = TextDataset(matrix_test)
+	# loader = DataLoader(ds, collate_fn=pad_collate_fn, batch_size=3)
+	# data = next(iter(loader))
+	# print("Chaîne à code : ", matrix_test)
+	# # Longueur maximum
+	# assert data.shape == (7, 3)
+	# print("Shape ok")
+	# # e dans les deux cas
+	# assert data[2, 0] == data[1, 2]
+	# print("encodage OK")
+	# # Token EOS présent
+	# assert data[5,2] == EOS_IX
+	# print("Token EOS ok")
+	# # BLANK présent
+	# assert (data[4:,1]==0).sum() == data.shape[0]-4
+	# print("Token BLANK ok")
+	# # les chaînes sont identiques
+	# s_decode = " ".join([code2string(s).replace(id2lettre[PAD_IX],"").replace(id2lettre[EOS_IX],"") for s in data.t()])
+	# print("Chaîne décodée : ", s_decode)
+	# assert matrix_test == s_decode
+	# " ".join([code2string(s).replace(id2lettre[PAD_IX],"").replace(id2lettre[EOS_IX],"") for s in data.t()])
