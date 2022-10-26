@@ -48,6 +48,8 @@ for seed in range(5):
 
 
 
+SLOWER LR : more stable learning
+DQN > DDQN but probably because cartpole is really easy env and DDQN would be better with more steps
 
 
 
