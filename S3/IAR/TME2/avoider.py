@@ -16,7 +16,11 @@ class TutorialController(Controller):
 		print("I'm initialised")
 
 	def sig(self, x):
- 		return 1/(1 + np.exp(-x))
+		return 1/(1 + np.exp(-x))
+
+	def add_noise_to_converge(self, x, noise):
+		return x + np.random.normal(0, noise, x.shape) 
+
 
 	def step(self):  # step is called at each time step
 		# Simple avoidance
@@ -40,10 +44,10 @@ class TutorialController(Controller):
 		if (camera_dist[1] < 1  # if we see something on our right
 				or camera_dist[2] < 1):  # or in front of us
 			inverse_distance = 1/((camera_dist[1]) + epsilon) * avoid_factor
-			self.set_rotation(self.sig(inverse_distance))  # turn left
+			self.set_rotation(self.add_noise_to_converge(self.sig(inverse_distance), 0.01))  # turn left
 		elif camera_dist[3] < 1:  # Otherwise, if we see something on our left
 			inverse_distance = 1/((camera_dist[3]) + epsilon) * avoid_factor
-			self.set_rotation(- self.sig(inverse_distance))  # turn right
+			self.set_rotation(self.add_noise_to_converge(- self.sig(inverse_distance), 0.01))  # turn right
 
 
 

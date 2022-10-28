@@ -55,5 +55,48 @@ DQN > DDQN but probably because cartpole is really easy env and DDQN would be be
 
 
 
-  param lunarlander:
+param lunarlander:
 
+params={
+    "save_best": False,
+    "logger":{
+      "classname": "bbrl.utils.logger.TFLogger",
+      "log_dir": "./tmp/dqn-buffer-" + str(time.time()),
+      "cache_size": 10000,
+      "every_n_seconds": 10,
+      "verbose": False,    
+      },
+
+    "algorithm":{
+      "seed": seed,
+      "max_grad_norm": 0.5,
+      "epsilon": 0.12,
+      "min_eps": 0.1,
+      # "epsilon_decay": 5e-6,
+      "epsilon_decay": 5e-8,
+      "n_envs": 16,
+      "n_steps": 32,
+      "eval_interval": 2000,
+      "learning_starts": 0,
+      "nb_evals": 10,
+      "buffer_size": 50000,
+      "batch_size": 128,
+      "target_critic_update": 250,
+      "max_epochs": 3500,
+      "discount_factor": 0.99,
+      "architecture":{"hidden_size": [256, 256]},
+    },
+    "gym_env":{
+      "classname": "__main__.make_env",
+      "env_name": "LunarLander-v2",
+      # "env_name": "CartPole-v1",
+    },
+    "optimizer":
+    {
+      "classname": "torch.optim.Adam",
+      "lr": 8e-4,
+    }
+  }
+
+
+  

@@ -34,6 +34,7 @@ class TutorialController(Controller):
 		## Now we need to build a single cluster. We will check if the cluster we are going to
 		## join is the biggest cluster. If it isn't, we won't join.
 		print("CURRENT BIGGEST CLUSTER SIZE:", self.biggest_number_neighbor)
+		
 		## check the number of neighbor for each agent
 		n_neighbor = 0
 		minimum_distance_cluster = 0
