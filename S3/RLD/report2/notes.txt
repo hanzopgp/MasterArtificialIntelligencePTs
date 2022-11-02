@@ -99,4 +99,106 @@ params={
   }
 
 
-  
+
+
+
+
+  param pendulum :
+
+  ddpg :
+
+  params={
+  "save_best": True,
+  "plot_agents": True,
+  "logger":{
+    "classname": "bbrl.utils.logger.TFLogger",
+    "log_dir": "./tmp/" + str(time.time()),
+    "cache_size": 10000,
+    "every_n_seconds": 10,
+    "verbose": False,    
+    },
+
+  "algorithm":{
+    "seed": 1,
+    "max_grad_norm": 0.5,
+    "epsilon": 0.02,
+    "n_envs": 1,
+    "n_steps": 100,
+    "eval_interval": 2000,
+    "nb_evals": 10,
+    "gae": 0.8,
+    "max_epochs": 15000,
+    "discount_factor": 0.98,
+    "buffer_size": 2e5,
+    "batch_size": 64,
+    "tau_target": 0.05,
+    "learning_starts": 10000,
+    "action_noise": 0.1,
+    "architecture":{
+        "actor_hidden_size": [400, 300],
+        "critic_hidden_size": [400, 300],
+        },
+  },
+  "gym_env":{
+    "classname": "__main__.make_gym_env",
+    "env_name": "Pendulum-v1",
+  },
+  "actor_optimizer":{
+    "classname": "torch.optim.Adam",
+    "lr": 1e-3,
+  },
+  "critic_optimizer":{
+    "classname": "torch.optim.Adam",
+    "lr": 1e-3,
+  }
+}
+
+
+
+td3 :
+
+params={
+  "save_best": True,
+  "plot_agents": True,
+  "logger":{
+    "classname": "bbrl.utils.logger.TFLogger",
+    "log_dir": "./tmp/" + str(time.time()),
+    "cache_size": 10000,
+    "every_n_seconds": 10,
+    "verbose": False,    
+    },
+
+  "algorithm":{
+    "seed": 1,
+    "max_grad_norm": 0.5,
+    "epsilon": 0.02,
+    "n_envs": 1,
+    "n_steps": 100,
+    "eval_interval": 2000,
+    "nb_evals": 10,
+    "gae": 0.8,
+    "max_epochs": 15000,
+    "discount_factor": 0.98,
+    "buffer_size": 2e5,
+    "batch_size": 64,
+    "tau_target": 0.05,
+    "learning_starts": 10000,
+    "action_noise": 0.1,
+    "architecture":{
+        "actor_hidden_size": [400, 300],
+        "critic_hidden_size": [400, 300],
+        },
+  },
+  "gym_env":{
+    "classname": "__main__.make_gym_env",
+    "env_name": "Pendulum-v1",
+  },
+  "actor_optimizer":{
+    "classname": "torch.optim.Adam",
+    "lr": 1e-3,
+  },
+  "critic_optimizer":{
+    "classname": "torch.optim.Adam",
+    "lr": 1e-3,
+  }
+}
