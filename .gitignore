@@ -8,5 +8,6 @@ roborobo4/
 *.jpg
 *.jpeg
 *.png
+*.agt
 
 events.out*
