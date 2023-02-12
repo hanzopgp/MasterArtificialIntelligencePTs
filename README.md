@@ -13,14 +13,14 @@ MasterArtificialIntelligencePTs/
 │     ├── IAMSI/    (Symbolic artificial intelligence)
 │     ├── BIUM/     (Business intelligence & user modelling) [+ LOLAnalysis repository]
 │     ├── PLDAC/    (Data science project) [+ JetsonAutonomousDriving repository]
-│     └── INTERN/   (Data science internship) [+ AlphaZeroICGA repository]
+│     └── INTERN/   (Deep reinforcement learning internship) [+ AlphaZeroICGA repository]
 ├── S3/
-│     ├── AMAL/     (Machine learning & deep learning) [+ ... repository]
-│     ├── RLD/      (Reinforcement learning & deep learning) [+ ... repository]
-│     ├── IAR/      (Artificial intelligence for robotics) [+ ... repository]
-│     ├── RDFIA/    (Computer vision) [+ ... repository]
-│     └── REDS/     (Research methodology in data science) [+ ... repository]
-│     └── INTERN/   (Data science internship) [+ ... repository]
+│     ├── AMAL/     (Machine learning & deep learning) [+ BrainDataAugmentation repository]
+│     ├── RLD/      (Reinforcement learning & deep learning)
+│     ├── IAR/      (Artificial intelligence for robotics) [+ PrioritizedReplay repository]
+│     ├── RDFIA/    (Computer vision)
+│     └── REDS/     (Research methodology in data science)
+│     └── INTERN/   (Deep learning & cognitive science internship)
 ├── README.md		          
 └── LICENCE  
 </pre></code>
