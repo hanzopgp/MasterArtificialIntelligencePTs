@@ -1,0 +1,178 @@
+\section{Multi-layer perceptron}
+
+\subsection{Part 1}
+
+1. The training set is used to learn the parameters of the model. The validation set is used to check if there is any kind of overfitting, it is also useful to find the best hyper-parameters such as the number of neurons, layers, learning rate... The test set is the final set used to evaluate the model in term of accuracy for instance.
+
+2. It is always a good thing to add data to a training process as long as it is good quality data. If you have more data, you can have more parameters hence a more complex model. If you have too much parameters compared to the number of data, some of the weights won't be tunes correctly and it can also lead to overfit.
+
+3. Non-linear activation are really important because else you can add as many neurons and layers as you want, you still get a huge linear perceptron. It is easily demonstrated thanks to maths.
+
+4. nx is the number of input features, nh is the number of hidden neurons, ny is the number of output which is also the number of classes you want to predict.
+
+5. y hat is the final output vector estimated by the neural network, y is the one-hot vector label. For instance you can have yhat = [0.2, 0.5, 0.3] which means the model predicted the class 2; and you get y = [0, 0, 1] which means the correct class to predict was the 3rd one.
+
+6. The softmax function transforms a vector of number by a vector of probabilities summing up to 1. It is better for learning than a simple normalization by dividing each value by the sum of the vector because it pushes values to 0 or 1. Thanks to that the model kind of understand it has to guess only one class.
+
+7. 
+\[
+    h_{j} = \sum_{j=0}^{nx} x_{j} * w_{j}^h + b^h
+\]
+\[
+    H = X * W_{h}^T + B_{h}
+\]
+\[
+    \hat{h_{j}} = ReLU(h_{j})
+\]
+\[
+    \hat{H} = ReLU(H)
+\]
+\[
+    \hat{y_{j}} = Softmax(\sum_{j=0}^{nh} \hat{h_{j}} * w_{j}^y + b^y)
+\]
+\[
+    \hat{Y} = Softmax(\hat{H} * W_{y}^T + B_{y}) 
+\]
+\[
+    \hat{y_{j}} = Softmax(\sum_{k=0}^{nh} ReLU(\sum_{j=0}^{nx} x_{j} * w_{j}^h + b^h) * w_{k}^y + b^y)
+\]
+\[
+    \hat{Y} = Softmax(ReLU(X * W_{h}^T + B_{h}) * W_{y}^T + B_{y})
+\]
+
+8. If you want to minimize the loss function, yhat has to be the closest possible to y. For cross entropy loss you want the yhat vector to be the same as the y vector. For mse loss you want the scalar value yhat to be as close as possible as the scalar value y.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{img/8.png}
+\end{figure}
+
+9. In classification we often use softmax activation function on the output so we get a distribution and cross-entropy is well fitted to compare yhat and y in that case. In regression we only compare scalar values so mse loss is enough.
+
+10. The classic gradient descent is nice because you use the gradients on the whole dataset which gives an overall view but it is computationally very expensive. The online stochastic versions is really fast because you compute gradient on only one example but it is really unstable since you only look at one example which might not be the best example of the dataset. The mini-batch stochastic gradient descent is a nice trade-off between classic and online gradient descent.
+
+11. The learning rate is one of the most important hyper-parameter of the model. This value acts on how hard you will update the weights after each gradient descent. A low value will make the training really long but stable, it can also lead to being stuck in local minimas. A huge value will probably make the loss diverge. Most of the time we need to find a nice value thanks to experimentation (often around 1e-3 / 1e-4). 
+
+12. We can see that the backprop algorithm is way faster than the naive approach. Indeed, the backprop algorithm is linear in time with the number of layers unlike the naive approach which is quadratic.
+
+13. Each modules (layers, losses, activations...) must be derivable with respect to their parameters (if they have any) and their inputs in order to execute the backward pass.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=15cm]{img/14-16.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=15cm]{img/17.png}
+\end{figure}
+
+\subsection{Part 2}
+
+1. We studied the effect of hyper-parameters by finding some hyper-parameters that works well for the MNIST classification. Then we lock these hyper-parameters and we change only one of them. After some tuning, we find that a batch size of 100, 100 hidden neurons and a learning rate of 0.03 works well. First we decide to study the effect of the learning rate on the accuracy and loss. Then we will study the effect of the number of hidden neurons and finaly the number of batches. The following loss and metrics are computed on the test set.
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat{\includegraphics[width=8cm]{img/acc_lr.png}} &
+\subfloat{\includegraphics[width=8cm]{img/loss_lr.png}}
+\end{tabular}
+\end{figure}
+
+Here we can see that, since we are working on an easy problem, the model would manage to converge with any learning rate. The only difference is how quick it is. In a harder problem, a low learning rate could lead to no learning and a high learning rate could lead to divergence.
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat{\includegraphics[width=8cm]{img/acc_nh.png}} &
+\subfloat{\includegraphics[width=8cm]{img/loss_nh.png}}
+\end{tabular}
+\end{figure}
+
+Here we see that if you had neurons you get a better model, this is also because there is only a single hidden layer. If we had several layers and too much hidden neurons, this would probably lead to overfit and we would see the test accuracy decrease at some point.
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat{\includegraphics[width=8cm]{img/acc_batch.png}} &
+\subfloat{\includegraphics[width=8cm]{img/loss_batch.png}}
+\end{tabular}
+\end{figure}
+
+With a low number of batch, we get a high batch size. That makes the learning slower because the gradient is computed on a bigger batch. Besides, the gradient is also more accurate and the loss decrease faster (in term of epoch, not time).
+
+\section{Convolutional neural network}
+
+\subsection{Part 1}
+
+1. Assuming x is number of input channels, y and z are input size of one channel, then the output size would be ( [(y -− k + 2p)/s] + 1 , [(z -− k + 2p)/s] + 1 ). Number of weights is (k*k). In case of fully-connected having the same output size, number of weights is ( [(y -− k + 2p)/s] + 1 ) * ( [(z -− k + 2p)/s] + 1 ) * x * y * z.
+
+2. Advantage: fewer parameters to learn so more memory efficient, much more adapted to images (edge detection, classification, segmentation...), less sensitive to pixel level changes so more generalizable. Limitation: longer training time and harder to converge to a satisfying results.
+
+3. To reduce the data dimension, not only to be memory and computationally efficient, but by pooling pixels close together, we can extract the most useful information from each individual areas in the image, either using max or average pooling.
+
+4. If modifying the image is possible, we can either resize the input image to the expected size, or crop the original image to the correct size (in the center for example). Otherwise, we have to train an encoder network that takes the image as input and produces an image with correct size as output.
+
+5. A fully connected layer (nX number of input neurons and nY number of output neurons) is equivalent to a convolutional layer where there are nY kernels whose size is nX (or square root of nX for each dimension in case of 2D convolution, i.e. the kernel covers the entire input space and there is no striding or padding necessary).
+
+7. In the first and second conv layers of the VGG16 network, the receptive field of a neuron has the size (x*k*k) where x is number of input channels, k is kernel size. Going deeper into the network, it gets bigger since all neurons belong to a receptive field have also their own receptive fields which affect the current neuron in the deep layer.
+
+\subsection{Part 2}
+
+8. Padding 2 stride 1
+
+9. Padding 0 stride 2
+
+10. Layers:
+
+- conv1: Output size 32*32*32, number of weights 32*5*5 = 800
+
+- pool1: Output size 32*16*16
+
+- conv2: Output size 64*16*16, number of weights 64*5*5 = 1600
+
+- pool2: Output size 64*8*8
+
+- conv3: Output size 64*8*8, number of weights 64*5*5 = 1600
+
+- pool3: Output size 64*4*4
+
+- fc4: Output size 1*1000, number of weights 64*4*4*1000 = 1,024,000
+
+- fc5: Output size 1*10, number of weights 1,024,000 * 10 = 10,240,000
+
+The number of parameters grows much bigger as the network gets deeper.
+
+11. Total number of weights to learn is 11,268,000, much larger than the number of examples which is 50,000 training and 10,000 testing images.
+
+14. The major difference between training and testing is that in training, we pass the optimizer parameter into the epoch function which is used to backpropagate the gradient throughout the network to minimize loss and increase accuracy, whereas in testing we simply pass the input forward to obtain the classification results and calculate the accuracy using the current network's parameters.
+
+16. Learning rate helps speed up or slow down convergence rate. A LR too large can help push the network out of a local minimum but also increases risk of divergence, while a LR too small can make convergence much slower or impossible to break out of a local minimum. Batch size helps diversify the training data : optimal solutions can be far away from the initial weights, and if loss is averaged over the batch then a large batch sizes doesn't allow the model to jump far enough to reach the optimal solution for the same number of training epochs.
+
+17. In the first epoch we can observe that the training loss fluctuates quite violently 
+
+18. After about 20 epochs, the training accuracy goes to 100\% and loss goes to 0, meaning that the model has overfitted and there is nothing else to learn. Meanwhile, test accuracy has converged at about 70\% which in general is good, but if the model hadn't overfitted, it could have still learn more and perform better with unseen data
+
+
+\subsection{Part 3}
+
+19. The first epoch does not fluctuate as much as before since example images are now closer to each other. After 20 epochs, the results are slightly better than without standardization
+
+20. The averaged image is calculated from training dataset, which the network is supposed to "know well", while validation images should not be known at any time by the network.
+
+22. The results seem more promising than before, as at the end of 20th epoch, the model gets about 80\% of test accuracy, which is much better than the previous approaches.
+
+23. Horizontal symmetry can be ineffective in some types of classification problems. For example, if this technique was used with the MNIST dataset, it would not make sense since digits are not correct when flipped. The same with letter recognition problem.
+
+24. By cropping the original image, information is lost, which most of the time is not important if the number of cropped pixels are relatively small, however if essential information lies on the edge of the image instead of the center, this approach can hurt the model's performance. On the other hand, the limits of horizontal flipping are answered in the previous question.
+
+26. The end results after 20 epochs is about the same as with data augmentation, but learning is much more stable at later epochs thanks to LR decaying.
+
+27. LR decay improves learning because at start, the model is allowed to explore more with a large LR, and after a while when LR gets smaller, the model is probably in an optimal region where it converges to the global minimum without breaking out again thanks to small LR.
+
+29. With dropout, we observe that the test loss and accuracy follows very closely with training loss and accuracy, which is normally not the case in the previous approaches. At the end of 20 epochs, both training and testing accuracy are about 80\%, and training loss around 0.6, which means that the model has a lot more potential to grow before overfitting.
+
+30. In general, regularization is methods or approaches that improve model learning by tweaking the training to reduce the risk of overfitting.
+
+31. Dropout layers are important because they prevent overfitting on the training data. If they aren’t present, the first batch of training samples influences the learning in a disproportionately high manner. This, in turn, would prevent the learning of features that appear only in later samples or batches.
+
+32. There is only one parameter to this layer, the dropout rate, which indicates how many neurons we would like to drop from the current learning epoch.
+
+34. With batch normalization, training loss is a little bit more stable than before, and final results is slightly better (82\% over 80\%)

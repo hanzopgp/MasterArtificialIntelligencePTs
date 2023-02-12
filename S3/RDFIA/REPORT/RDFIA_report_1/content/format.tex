@@ -1,0 +1,105 @@
+\section{Vanilla dataset}
+
+The dataset contains 4485 images of size 220x330 pixels. Each image corresponds to a label allowing us to perform supervised learning. There are in total 15 well-balanced different labels for this dataset, thus roughly 300 examples per class.
+
+\section{Extracting SIFT descriptors}
+
+Before trying to classify the images, we need a way to extract features. Here we are going to use SIFT descriptors. SIFT descriptors are often used to describe an image thanks to local analysis. Indeed, we split the image into several patches and we compute a histogram of the gradients using Sobel filters inside each patch. In our project, the patches are 16x16 pixel and we obtain 128 patches per images.
+
+\section{Building a visual dictionary}
+
+After computing the SIFT descriptors for each image, we proceed to find patterns in the whole dataset. If we managed to find some patterns, we would be able to get a strong representation of an image by attributing each patch of the image to a cluster. For this project, we built 1000 clusters plus one which encodes the uniform patches (those having nearly identical pixels). In order to learn the clusters, we simply use the K-means algorithm on the train dataset.
+
+\section{Bag of Word (BoW)}
+
+BoW is a Machine learning technique in natural language processing which extracts features from a piece of text (sentence, paragraph, etc...). Here we use this same technique, except that the word vector now contains "visual words" that we just built in the last part. Each image is encoded into a vector that counts the number of occurrences of each visual word. Features can now be extracted.
+
+\section{Support Vector Machine (SVM)}
+
+Now that we have a nice representation of the images, we use SVM to classify the images. Thanks to GridSearch, we are able to find the best hyper-parameters such as the kernel type or the regularization parameter C. After multiple training, we find that the best C value is 150. The figure below shows the relationship between accuracy on validation dataset and the value of C.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=6cm]{img/hyperc.png}
+    \caption{Relation between accuracy and C}
+\end{figure}
+
+Fixing C at 150, we then perform GridSearch on other hyper-parameters such as different kernels, class weight and decision function's shapes. The rbf kernel seems to be the best kernel most of the time and using class\_weight increases the validation accuracy. Lastly, the best decision function shape is one-versus-rest. We managed to obtain 72\% validation accuracy during Gridsearch, and after fitting the model with the optimal parameters we obtain 77\% test accuracy.
+
+\section{Question answering}
+
+\subsection{Part 1}
+
+1. We can decompose the 2D Sobel filter into two 1D filter which are [1, 2, 1].T and [-1, 0, 1].
+
+2. One convolution kernel is used to detect horizontal gradient and one for vertical. A combination of the two works for all directions and is computationally less expensive.
+
+3. The Gaussian mask helps deactivate noisy pixels while maintaining the weights of important pixels.
+
+4. It is way easier to work with 8 discrete values than a continuous value for the orientation.
+
+5. We use two normalization/clipping steps in the post-processing to make sure that a patch with lots of information would be more outstanding than the others, while its numerical value (here, the L2 norm) stays within a reasonable and uniform range
+
+6. SIFT is a good way to describe a patch of an image because it represents the orientation in that patch and at the same time detects the sudden change in gradient in that patch giving a strong indication of intersection of objects, which consequently is useful for edge and corner detection.
+
+7. The results of this section are a nice technique that extract information from a small piece of an image (patch). By discretizing a patch into a small set of directions, we obtain the "sense" of where that patch is heading to, from which we compute its gradient in order to detect if it is the boundary of an object in the image.
+
+\subsection{Part 2}
+
+8. We need a visual dictionary because the SIFT descriptors aren't enough to classify an image. Building a visual dictionary allows us to have information on similar SIFT descriptors in the image thanks to K-mean algorithm.
+
+9. Indeed, the formula is the definition of K-mean algorithm at convergence.
+
+10. By default, the more number of clusters the better since we can extract more features from an image. However, too many clusters lead to over-representing in simple images and longer computation time. So the "optimal" number of clusters depends on the image itself.
+
+11. Because SIFTs can group closely related patches by their closeness in the SIFT space, while raw pixels are too arbitrary and it is nearly impossible to have two nearly identical patches of raw pixels (different lighting, color temperature...)
+
+12. The results show that within a cluster, the patches are visually similar, and sometimes indistinguishable with naked eyes.
+
+13. The z vector is the occurrence counter vector of an image. Each index of z corresponds to a cluster and each element is the number of occurrence of the cluster in the image.
+
+14. As seen in the image below, we can see clearly the similar regions having the same color of their bounding boxes thanks to the clusters that they belong to. Furthermore, we see that the dominant features of this image include the sky, the tree, and the shadow.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=12cm]{img/house.png}
+    \caption{BoW regions in an example image}
+\end{figure}
+
+15. We could use the distance between the point and the cluster instead of just 0-1 encoding. We could do that because after that we will sum up the values.
+
+16. The sum pooling is an efficient computation method to calculate the image's BoW histogram. We could have used the mean distance pooling described above
+
+17. We use the L2 normalization because we don't want some outlier values to bias our model.
+
+\subsection{Part 3}
+
+1. We can see that increasing the C value above 100 doesn't increase the accuracy of the model. We can deduce that 150 is enough to ignore enough wrongly classified images while maximizing validation accuracy.
+
+The figures below depict our tests with different values for kernel types and class weights while fixing C at 150 for all test cases.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=9cm]{img/kernel.png}
+    \caption{Accuracy of SVM with C=150, class\_weight=balanced}
+\end{figure}
+
+We can observe that by fixing a balanced class weight, performance is nearly identical between Linear and RBF kernels and far exceeds that of Poly.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=9cm]{img/class weight.png}
+    \caption{Accuracy of SVM with C=150, kernel=RBF}
+\end{figure}
+
+The same observation can be made by fixing the RBF kernel and varying class weight.
+
+2. The C value is a regularization parameters which regulates the number of examples classified wrongly by the SVM. It is really useful in case there are some outliers in the data or if the decision function is complicated.
+
+The class weight parameter is useful if our dataset is not balanced, if the value is "balanced" then there is a weight on each class to take in account the class distribution and avoid over-fitting on classes with a lot of examples.
+
+The kernel type is the kernel chosen to fit the SVM. For example, if we use a linear kernel we will get a linear decision function but if we use a polynomial kernel we can classify data even if the decision shape is more complicated.
+
+The decision function shape parameters is just a choice between the one-versus-one and one-versus-rest classifier.
+
+3. The validation set is used to find the best hyper-parameters in the grid search so we need to use another set which wasn't used anywhere to get a unbiased accuracy value.

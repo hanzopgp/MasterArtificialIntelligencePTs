@@ -1,0 +1,171 @@
+% \begin{figure}[H]
+% \begin{tabular}{cc}
+% \subfloat{\includegraphics[width=8cm]{img/acc_lr.png}} &
+% \subfloat{\includegraphics[width=8cm]{img/loss_lr.png}}
+% \end{tabular}
+% \end{figure}
+
+\section{Transfer learning}
+
+\subsection{Section 1}
+
+1. The transition between the CNN and fully connected part consist of 7*7*512*4096 parameters which is roughly 100M. After that we have one 4096*4096 which is roughly 17M parameters and the last classification layer has 4096*1000 parameters which is 4M. Hence we have 100+17+4=121M parameters for the fully connected part.
+
+2. The output part is a 1000 value vector which represent a distribution. For this classification problem, we must have 1000 classes and since we want a distribution, we apply a softmax on this vector, so all the values sum up to 1.
+
+3. We tested classification on the two given images of a cat and a dog as shown below
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=17cm]{img/catdog.png}
+\end{figure}
+The model classifies the images as "Egyptian cat" and "Miniature poodle" which is correct.
+
+4. We extracted then visualize the first activation output of the model as shown below.
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{img/catdog2.png}
+\end{figure}
+We observe that important features are captured in each filter. For example, the 8th filter (up-most one to the right) captures the details in the image while the 2nd filter detects the object's edges.
+
+\subsection{Section 2}
+
+5. One of the reason is that the previous VGG16 model has 1000 outputs and the 15 Scene dataset only has 15 so we need to modify the classification part of the model.
+
+6. Pre-training on ImageNet allows the model to learn to extract features efficiently on a huge dataset. There is some features in images which can be usefull for different classification tasks, thanks to pre-training we don't need to start learning these features from scratch. Training from scratch on a small dataset can lead to overfitting, fine-tuning it after pre-training on a big dataset leads to better performance.
+
+7. The features extracted can be useless if the input images are too different, for instance, if we have a dataset with faces such as CelebA-HQ and another with natural images such as ImageNet.
+
+8. The impact of the layers where the features are extracted is way bigger than the classification layers.
+
+9. We can transform the grayscale images into RGB images by replicating the 1 grayscale channel into 3 RGB channel with the same value. This might lead to poor performance since the feature extracted for an RGB image can be different than the features useful for grayscale images. If possible, we should pre-train on a grayscale ImageNet dataset.
+
+10. We can use a multi layer perceptron with the features extracted as inputs. If we don't want it to be independant we can modify the fully-connected part of the main model to match our inputs/outputs dimensions.
+
+\section{Visualization}
+
+\subsection{Section 1}
+
+1. We computed and show the saliency map of some images below
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{img/salicency.png}
+\end{figure}
+We notice that important features of an object is clearly highlighted on the map. For example, the haystacks are highlighted and correctly classified instead of the trees or the sky. The brown bears' head features (nose, mouth, etc...) are also highlighed instead of the snow.
+
+2. Saliency maps are nice to see the pixel activation but we only see the importance of independant pixels for the classification. This is also a technique which can be interpreted differently if seen by different people, it isn't an objective metric. 
+
+3. Saliency maps can be used in segmentation or object detection tasks because it gives us the most "important" part of the image. It can also be used in cognitive science to model human attention. 
+
+4. We can see that VGG highlights the pixels even better than the first model. The pixels that belong to the classified objects are clearly showed in red in the saliency map.
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{img/salicencyVGG.png}
+\end{figure}
+
+\subsection{Section 2}
+
+5. Taking some original images as input, we generate a "fooling" image of a completely different class to trick the model to misclassify it. On the other hand, in the human eyes, we are not capable of distinguish the two images except when the difference in pixels between the two is magnified by ten times. In the picture shown below, the first image on the left is the original input, the second one is the image after applying a mask shown in the third image, and the fourth image shows the magnified difference for our human eyes.
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{img/fooling.png}
+\end{figure}
+
+\subsection{Section 2}
+
+6. This technique can have consequence in security. For example, if we have an object detection model which is supposed to detect humans and one of them wears a sweat with an adversarial example such as a landscape or a car etc... Then the model won't be able to recognize the human correctly. Even if the attacker doesn't have access to the model, adversarial examples can be found with reverse engineering.
+
+7. There is many ways to counter this kind of naive attacks. For instance, we can train the model differently by using vanilla and adversarial examples during the training. We can also use different models and vote. Indeed, the adversarial attacks might work on one model, but it will be really harder with several independent models.
+
+\subsection{Section 3}
+
+8. From a noisy random image at the beginning, our model slowly generate a new image by applying its knowledge about the features of a class. Here in this example, it slowly transforms a random image into the shape of the tarantula, which is a specie of spider
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=12cm]{img/tarantula.png}
+\end{figure}
+
+9. Smaller learning rate makes the features of the class less evident, while large learning rate makes them stand out more. Also, more iterations get us generated images that are closer to a real image than less iterations.
+
+10. We take the image of haystacks and let the model slowly generate an image of snails from it. As a result, we observe that the model transforms the haystacks into the snails' bodies and then adds distinctive features of the snails on top of the bodies, such as the shell and the eyes.
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=12cm]{img/snail.png}
+\end{figure}
+
+\section{Domain adaptation}
+
+\subsection{Section 2}
+
+1. Without GRL, all of the properties and features of the input "domain" will be effectively back-propagated to the model during the backward phase, rendering it much less generalizable. To make the model domain-agnostic (i.e. invariant to input domain), we have to include the GRL.
+
+2. After applying domain adaption, our DANN has 98.39\% accuracy which is only slightly worse than 99.11\% before. The less than one percent accuracy tradeoff is well-worthed as the DANN is much more adaptive and less biased by the input than the naive network.
+
+3. If the negative factor is small (i.e. close to zero) there will be less penalty therefore the model would still learn the input domain rather than being domain-invariant. If the factor is large (i.e. very low value far from zero), the model would become unstable which hurts the performance.
+
+4. Pseudo-labeling is when the model, trained on the source domain, is used to label the target domain data, which can then be used as additional training data for the model. This is done by selecting examples in the target domain that the model is most confident about (by defining a threshold) and treating the model's predicted labels for those examples as "pseudo-labels." These pseudo-labels are then used to fine tune the model on the target domain allowing it to learn from both the labeled source data and the unlabeled target data.
+
+\section{Generative adversarial networks}
+
+\subsection{Section 1}
+
+1. Equation (6) is the optimization of the generator, G(z) generates an image, D(G(z)) discriminates whether the image is real or generated. Here we try to maximize the log of this value, because it means that the discriminating network believes that the image is real, so the generator does a good job.
+Equation (7) is the optimization of the discriminator, it is an addition of two terms. The first one makes sure that the discriminator manages to classify correctly the x of the real images. The second term ensures that the discriminator classifies the generated images by maximizing 1 - D(G(z)), thus minimizing D(G(z)).
+If we use only one of these equations to train the model, it will not work because we can see that both G and D networks are present in both equations. If we train only one, the overall model will not learn because the other will not be a good enough enemy.
+
+2. We want to generate new images by training on example images. If the generator is well trained, the distribution P(z) should approximate the distribution of the example images.
+
+3. The equation should be the actual loss minus this term : $$\min_G \mathbb{E}_{z \sim p_z(z)}[\log(1-D(G(z)))]$$
+
+4. With default settings, we obtain the following results after 1, 200, 1000 and 2200 iterations
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=17cm]{img/gan mnist.png}
+\end{figure}
+We can see that starting from a noisy and completely random generation, our generator network gets better with more realistic output as the generated digits look more like hand-written, though some are unrecognizable.
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=12cm]{img/gan mnist loss.png}
+\end{figure}
+Looking at the loss of both networks, we see that the discriminator stays mostly near zero because it can distinguish in most cases real from fake images and it is easy at the beginning, while the generator's loss is high. There are however moments when the generator is successful in tricking the discriminator making the latter's loss very high. As training progresses further, it is likely that the g-loss would be lower while the d-loss would be higher.
+
+5. We tried increasing ngf to 256 (from 32 as before) which increases significantly the number of neurons in the generator's network. Besides the quite longer computation time (which is obvious), we notice that after 2200 iterations the image is only slightly more realistic, which is not a good trade-off.
+
+We also tried learning for longer (30 epochs) and the generated digits seem to be more realistic. However, noise starts to come back to the background which is interesting.
+
+\subsection{Section 2}
+
+6.
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat{\includegraphics[width=7cm]{img/dcgan1.png}} &
+\subfloat{\includegraphics[width=7cm]{img/dcgan2.png}}
+\end{tabular}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat{\includegraphics[width=7cm]{img/dcgan3.png}} &
+\subfloat{\includegraphics[width=7cm]{img/dcgan4.png}}
+\end{tabular}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=7cm]{img/dcgan5.png}
+\end{figure}
+
+We can see that the training is going as expected, although some classes are harder to generate than others, for example 0 is easier than 2. The training process takes longer than the classic GAN training.
+
+7. We cannot remove the vector y because the generator will not learn to generate images based on its classes. The vector y is mandatory in the context of conditional GAN.
+
+8. We can see a difference between the losses during training. Looking at the training curves, it appears that classical GAN does a better job of generating images than conditional GAN, at the same epochs. This is probably due to the fact that y conditioning adds complexity to image generation.
+
+9. The vector z is a random vector that acts as an input and a seed. After passing through the forward pass of the generator, it will become an image conditioned on the class. During the forward pass, this z vector is modified to become the image, so each z vector will become a different image. 
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=7cm]{img/dcgan5.png}
+\end{figure}
+
+Looking at this image, we can see that each column corresponds to the class and each row corresponds to a different input z vector. 
